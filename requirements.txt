@@ -1,0 +1,7 @@
+openai
+numpy
+scipy
+pandas
+matplotlib
+pillow
+wordcloud
