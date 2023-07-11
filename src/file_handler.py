@@ -242,7 +242,6 @@ def clean_data(wk):
                         data[col] = data[[col, follow_up_col]].max(axis=1)
 
         #def clean_data(wk):
-    # ... All previous steps remain the same ...
 
     # List to keep track of follow-up columns
     follow_up_columns = []
