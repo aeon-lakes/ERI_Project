@@ -1,16 +1,30 @@
-# This is a sample Python script.
+# Main program loop
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import os
+import file_handler as fh
+
+# Prompts for access to survey output file
+# Creates a working copy leaving original intact
+fh.create_working_copy()
+
+# Obtain main.py Absolute file path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the relative path to the working copy CSV file
+working_copy_path = os.path.join(current_dir, '..', 'data', 'working_copy.csv')
+
+# Opens working_data.csv
+# Cleans the data
+# Saves a copy.
+fh.clean_data(working_copy_path)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
+
+
+
+
