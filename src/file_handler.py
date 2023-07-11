@@ -7,11 +7,13 @@ from tkinter import Tk, filedialog
 
 def create_working_copy():
     # Define the directory paths
-    src_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(os.path.dirname(src_dir), 'data')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    parent_dir = os.path.dirname(current_dir)
+    data_dir = os.path.join(parent_dir, 'data')
+    tests_dir = os.path.join(parent_dir, 'tests')
 
     # File path for reference eri_test_data.csv
-    reference_file_path = os.path.join(os.getcwd(), '..', 'tests', 'eri_test_data.csv')
+    reference_file_path = os.path.join(tests_dir, 'eri_test_data.csv')
 
     # Load the reference data from eri_test_data.csv
     reference_data = pd.read_csv(reference_file_path, nrows=1)
@@ -66,13 +68,13 @@ def create_working_copy():
 
     elif choice.upper() == "T":
         # File path for test data
-        tests_dir = os.path.join(os.path.dirname(src_dir), 'tests')
         file_path = os.path.join(tests_dir, 'eri_test_data.csv')
 
         # Create a working copy by copying the test data
         output_file_path = os.path.join(data_dir, 'working_copy.csv')
         shutil.copy(file_path, output_file_path)
         print("The test data have been duplicated as 'working_copy.csv' in the 'data' directory.")
+
 
 
 def clean_data(wk):
