@@ -180,14 +180,14 @@ def over_commitment(data):
 
 
 def eri(data):
-    # Define the correction factor for the short version
-    k = 7 / 3
+    # Define the correction factor
+    c = 0.454545
 
-    # Calculate the effort-reward imbalance index according to the formula ER = k(E/R)
+    # Calculate the effort-reward imbalance index according to the new formula ER = e/(r*c)
     # Check if both Effort and Reward are not NaN, and only then perform the calculation
-    data['ERI'] = data.apply(lambda row: k * (row['Effort'] / row['Reward']) if pd.notna(row['Effort']) and pd.notna(row['Reward']) else np.nan, axis=1)
+    data['ERI'] = data.apply(lambda row: row['Effort'] / (row['Reward'] * c) if pd.notna(row['Effort']) and pd.notna(row['Reward']) else np.nan, axis=1)
 
-    print("Effort-Reward Imbalnce Indices calculated for each respondent.")
+    print("Effort-Reward Imbalance Indices calculated for each respondent.")
 
     return data
 
