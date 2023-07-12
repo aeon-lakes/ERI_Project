@@ -5,13 +5,20 @@ import openai
 import json
 import pandas as pd
 
-# Load API key from secrets.json
-with open('secrets.json') as f:
-    secrets = json.load(f)
-openai.api_key = secrets['openai_api_key']
 
+from tqdm import tqdm
 
-def sentiment(data):
+def sentiment(file_path, secrets_path):
+    # Load API key from secrets.json
+    with open(secrets_path) as f:
+        secrets = json.load(f)
+    openai.api_key = secrets['OPENAI_API_KEY']
+
+    # Load the data
+    data = pd.read_csv(file_path)
+
+    print("Analysing sentiment. This may take some time ...")
+
     # Columns to analyze
     columns_to_analyze = [
         'What are things that make your work enjoyable and fulfilling? Have these things become more or less common in your recent experience? Are there factors that make your role eu-stressful (stressful and challenging, but in a good way)? Are these factors more or less present in your recent experience?',
@@ -22,7 +29,8 @@ def sentiment(data):
     ]
 
     # Iterate through each row
-    for i, row in data.iterrows():
+    for i in tqdm(range(len(data)), desc="Progress"):  # Add progress bar here
+        row = data.iloc[i]
         # Iterate through each column
         for column in columns_to_analyze:
             text = row[column]
@@ -32,7 +40,7 @@ def sentiment(data):
             # Generate the sentiment
             response = openai.Completion.create(
                 model="text-davinci-003",
-                prompt=f"Classify the sentiment in: {text}",
+                prompt=f"This is a sentiment classification task. The question was: '{column}'. The response was: '{text}'. Classify the sentiment of the response as either Positive, Negative, or Neutral.",
                 temperature=0,
                 max_tokens=60,
                 top_p=1.0,
@@ -45,6 +53,9 @@ def sentiment(data):
             # Update the cell with the sentiment
             data.at[i, column] = f"({sentiment}). {text}"
 
+    # Save the updated data back to the CSV file
+    data.to_csv(file_path, index=False)
 
 
-    return data
+
+
