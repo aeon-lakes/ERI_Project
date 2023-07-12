@@ -4,6 +4,7 @@ import numpy as np
 import os
 import shutil
 from tkinter import Tk, filedialog
+from datetime import datetime
 
 def create_working_copy():
     # Define the directory paths
@@ -66,14 +67,20 @@ def create_working_copy():
         else:
             print("No file selected. Exiting.")
 
+
+
     elif choice.upper() == "T":
+
         # File path for test data
         file_path = os.path.join(tests_dir, 'eri_test_data.csv')
 
         # Create a working copy by copying the test data
-        output_file_path = os.path.join(data_dir, 'working_copy.csv')
+        datestamp = datetime.now().strftime("%Y%m%d")
+        output_file_name = f"{datestamp}_working_copy.csv"
+        output_file_path = os.path.join(data_dir, output_file_name)
         shutil.copy(file_path, output_file_path)
-        print("The test data have been duplicated as 'working_copy.csv' in the 'data' directory.")
+        print(
+            f"The test data have been duplicated as '{output_file_name}' in the 'data' directory.")
 
 
 
@@ -124,9 +131,9 @@ def clean_data(wk):
         'I have a lot of responsibility in my job.': 'ERI3 (I have a lot of responsibility in my job.)',
         'I am often pressured to work overtime.': 'ERI4 (I am often pressured to work overtime.)',
         'Over the past few years, my job has become more and more demanding.': 'ERI6 (Over the past few years, my job has become more and more demanding.)',
-        'I receive the respect I deserve from my superiors.': 'ERI17 (I receive the respect I deserve from my superiors.)',
-        'I receive the respect I deserve from my colleagues.': 'ERI18 (I receive the respect I deserve from my colleagues.)',
-        'I experience adequate support in difficult situations.': 'ERI19 (I experience adequate support in difficult situations.)',
+        'I receive the respect I deserve from my superiors.': 'ERI7 (I receive the respect I deserve from my superiors.)',
+        'I receive the respect I deserve from my colleagues.': 'ERI8 (I receive the respect I deserve from my colleagues.)',
+        'I experience adequate support in difficult situations.': 'ERI9 (I experience adequate support in difficult situations.)',
         'I am treated unfairly at work.': 'ERI10 (I am treated unfairly at work.)',
         'Considering all my efforts and achievements, I receive the respect and prestige I deserve at work.': 'ERI15 (Considering all my efforts and achievements, I receive the respect and prestige I deserve at work.)',
         'My job promotion prospects are poor.': 'ERI11 (My job promotion prospects are poor.)',
@@ -137,7 +144,7 @@ def clean_data(wk):
         'My job security is poor.': 'ERI13 (My job security is poor.)',
         'I get easily overwhelmed by time pressures at work.': 'OC1 (I get easily overwhelmed by time pressures at work.)',
         'As soon as I get up in the morning I start thinking about work problems.': 'OC2 (As soon as I get up in the morning I start thinking about work problems.)',
-        'When I get home, I can easily relax and ‘switch off’ work.': 'OC3 (As soon as I get up in the morning I start thinking about work problems.)',
+        'When I get home, I can easily relax and ‘switch off’ work.': 'OC3 (When I get home, I can easily relax and ‘switch off’ work.)',
         'People close to me say I sacrifice too much for my job.': 'OC4 (People close to me say I sacrifice too much for my job.)',
         'Work rarely lets me go, it is still on my mind when I go to bed.': 'OC5 (Work rarely lets me go, it is still on my mind when I go to bed.)',
         'If I postpone something that I was supposed to do today I’ll have trouble sleeping at night.': 'OC6 (If I postpone something that I was supposed to do today I’ll have trouble sleeping at night.)'
@@ -147,11 +154,10 @@ def clean_data(wk):
     data.rename(columns=question_number_key, inplace=True)
 
     # Define a list of columns to apply reverse coding
-    reverse_coding = ['ERI17', 'ERI18', 'ERI19', 'ERI15', 'ERI14', 'ERI16',
-                      'OC3']
+    reverse_coding = ['ERI7', 'ERI8', 'ERI9', 'ERI16', 'ERI17', 'OC3']
 
-    question_numbers = ['ERI1', 'ERI2', 'ERI3', 'ERI4', 'ERI6', 'ERI7', 'ERI18',
-                        'ERI19', 'ERI10', 'ERI15', 'ERI11',
+    question_numbers = ['ERI1', 'ERI2', 'ERI3', 'ERI4', 'ERI6', 'ERI7', 'ERI8',
+                        'ERI9', 'ERI10', 'ERI15', 'ERI11',
                         'ERI14', 'ERI16', 'ERI17', 'ERI12', 'ERI13', 'OC1',
                         'OC2', 'OC3', 'OC4', 'OC5', 'OC6']
 
@@ -342,4 +348,4 @@ def clean_data(wk):
     data.to_csv(cleaned_file_path, index=False)
 
     print(
-        "Data are now cleaned and saved as 'working_copy_cleaned.csv' in the 'data' directory")
+        "Cleaned data saved as 'YYYYMMDD_working_copy_cleaned.csv' in the 'data' directory")
