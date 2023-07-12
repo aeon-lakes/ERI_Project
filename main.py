@@ -54,6 +54,6 @@ for file_name in os.listdir(data_folder_path):
         working_copy_path = os.path.join(data_folder_path, file_name)
         break
 
-# # OpenAI call to text-davinci-003 for sentiment analysis
-# # Costs $$$$ be careful
-# sa.sentiment(working_copy_path, secrets_path)
+# OpenAI call to text-davinci-003 for sentiment analysis
+# Costs $$$$ be careful
+sa.sentiment(working_copy_path, secrets_path)

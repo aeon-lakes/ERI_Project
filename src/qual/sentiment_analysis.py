@@ -17,7 +17,7 @@ def sentiment(file_path, secrets_path):
     # Load the data
     data = pd.read_csv(file_path)
 
-    print("Analysing sentiment. This may take some time ...")
+    print("Analysing sentiment using text-davinci-003. This may take some time ...")
 
     # Columns to analyze
     columns_to_analyze = [
@@ -39,8 +39,8 @@ def sentiment(file_path, secrets_path):
 
             # Generate the sentiment
             response = openai.Completion.create(
-                model="text-davinci-003",
-                prompt=f"This is a sentiment classification task. The question was: '{column}'. The response was: '{text}'. Classify the sentiment of the response as either Positive, Negative, or Neutral.",
+                model="text-davinci-002",
+                prompt=f"This is a sentiment classification task. The question was: '{column}'. The response was: '{text}'. Classify the sentiment of the response only using a single word: Positive, Negative, or Neutral.",
                 temperature=0,
                 max_tokens=60,
                 top_p=1.0,
@@ -53,9 +53,12 @@ def sentiment(file_path, secrets_path):
             # Update the cell with the sentiment
             data.at[i, column] = f"({sentiment}). {text}"
 
+
+
     # Save the updated data back to the CSV file
     data.to_csv(file_path, index=False)
 
+    print("Sentiment analysis complete.\nCheck manually before continuing")
 
 
 
