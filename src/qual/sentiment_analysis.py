@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 
 # Uses OpenAI API call to text-davinci-003 gpt model to perform sentiment
-# classification on free text answers.
+# classification on free text answers and add a requirement for human checking.
 def gpt_sentiment(file_path, secrets_path):
     # Load API key from secrets.json
     with open(secrets_path) as f:
@@ -19,12 +19,23 @@ def gpt_sentiment(file_path, secrets_path):
     # Load the data
     data = pd.read_csv(file_path)
 
-    # TODO: Function should check DataFrame to see if it has been
-    #  called on this file before. If it has not, add an empty 'gpt_sentiment'
-    #  column.
+    # Check if 'gpt_sentiment' and 'human_checked' columns exist.
+    # If not, add them with 'False' as the first and only entries.
+    if 'human_checked' not in data.columns:
+        data['human_checked'] = False
 
-    print("Analysing sentiment using text-davinci-003. This may take some "
-          "time ...")
+    if 'gpt_sentiment' not in data.columns:
+        data['gpt_sentiment'] = False
+    else:
+        # If 'gpt_sentiment' column exists, check whether set to 'True'
+        if data['gpt_sentiment'].iloc[0]:
+            print("GPT Sentiment analysis has already been performed on this "
+                  "file."
+                  "/nExiting to main program without making changes.")
+            return
+
+    print("Analysing sentiment using GPT LLM AI."
+          "\nThis may take some time ...")
 
     # Columns to analyze
     columns_to_analyze = [
@@ -73,13 +84,16 @@ def gpt_sentiment(file_path, secrets_path):
             # Update the cell with the sentiment
             data.at[i, column] = f"({sentiment}). {text}"
 
-    # TODO: Add 'True' to 'gpt_sentiment' column.
+            # Update the cell with the sentiment
+            data.at[i, column] = f"({sentiment}). {text}"
+            # Update 'gpt_sentiment' column
+            data.at[i, 'gpt_sentiment'] = True
 
     # Save the updated data back to the CSV file
     data.to_csv(file_path, index=False)
 
-    print("GPT sentiment analysis complete."
-          "\nCheck entries manually before continuing")
-
-
-
+    print("GPT sentiment analysis by text-davinci-003 complete."
+          "\nHuman check of GPT sentiment entries essential."
+          "\n1. Open YYYYMMDD_ERI_data.csv file in spreadsheet application."
+          "\n2. Manually change 'human_checked' entry to 'True' "
+          "\n   to continue analysis.")
