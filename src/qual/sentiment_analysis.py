@@ -7,7 +7,10 @@ import pandas as pd
 
 from tqdm import tqdm
 
-def sentiment(file_path, secrets_path):
+
+# Uses OpenAI API call to text-davinci-003 gpt model to perform sentiment
+# classification on free text answers.
+def gpt_sentiment(file_path, secrets_path):
     # Load API key from secrets.json
     with open(secrets_path) as f:
         secrets = json.load(f)
@@ -16,13 +19,26 @@ def sentiment(file_path, secrets_path):
     # Load the data
     data = pd.read_csv(file_path)
 
-    print("Analysing sentiment using text-davinci-003. This may take some time ...")
+    # TODO: Function should check DataFrame to see if it has been
+    #  called on this file before. If it has not, add an empty 'gpt_sentiment'
+    #  column.
+
+    print("Analysing sentiment using text-davinci-003. This may take some "
+          "time ...")
 
     # Columns to analyze
     columns_to_analyze = [
-        'What are things that make your work enjoyable and fulfilling? Have these things become more or less common in your recent experience? Are there factors that make your role eu-stressful (stressful and challenging, but in a good way)? Are these factors more or less present in your recent experience?',
-        'What do you experience in your work that makes it (dis)stressful, unpleasant, and/or unfulfilling to perform your role? How commonplace are these experiences?',
-        'Do you have any other comments about your work situation or role? Is there anything previous questions failed to allow you to express regarding workplace stressors?'
+        'What are things that make your work enjoyable and fulfilling? '
+        'Have these things become more or less common in your recent experience? '
+        'Are there factors that make your role eu-stressful (stressful and '
+        'challenging, but in a good way)? Are these factors more or less present'
+        ' in your recent experience?',
+        'What do you experience in your work that makes it (dis)stressful, '
+        'unpleasant, and/or unfulfilling to perform your role? How commonplace '
+        'are these experiences?',
+        'Do you have any other comments about your work situation or role? '
+        'Is there anything previous questions failed to allow you to express '
+        'regarding workplace stressors?'
     ]
 
     # Iterate through each row
@@ -37,7 +53,14 @@ def sentiment(file_path, secrets_path):
             # Generate the sentiment
             response = openai.Completion.create(
                 model="text-davinci-002",
-                prompt=f"This is a sentiment classification task. The question was: '{column}'. The response was: '{text}'. Classify the sentiment of the response only using a single word: Positive, Negative, or Neutral.",
+                prompt=f"This is a sentiment classification task. "
+                       f"The question was: '{column}'. "
+                       f"The response was: '{text}'. "
+                       f"Classify the sentiment of the response only "
+                       f"using a single word from the following: "
+                       f"Positive, "
+                       f"Negative, or "
+                       f"Neutral.",
                 temperature=0,
                 max_tokens=60,
                 top_p=1.0,
@@ -50,12 +73,13 @@ def sentiment(file_path, secrets_path):
             # Update the cell with the sentiment
             data.at[i, column] = f"({sentiment}). {text}"
 
-
+    # TODO: Add 'True' to 'gpt_sentiment' column.
 
     # Save the updated data back to the CSV file
     data.to_csv(file_path, index=False)
 
-    print("GPT sentiment analysis complete.\nCheck entries manually before continuing")
+    print("GPT sentiment analysis complete."
+          "\nCheck entries manually before continuing")
 
 
 
